@@ -147,6 +147,8 @@ jobs:
 # Create GitHub Release and upload files if make_release is true
       - name: 📝 Create GitHub Release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: Polaris-EvoX15-Kernel-${{ github.run_number }}
           prerelease: false
