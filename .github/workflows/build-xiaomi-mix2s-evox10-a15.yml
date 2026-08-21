@@ -144,39 +144,25 @@ jobs:
         uses: ./.github/workflows/upload-files
           
 # Create GitHub Release and upload files if make_release is true
-      - name: 📝 Create GitHub Release
-        uses: actions/create-release@v1
+      - name: 📝 Create GitHub Release and Upload Assets
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: Polaris-EvoX15-Kernel-${{ github.run_number }}
-          prerelease: false
-          release_name: "$tag_name $time"
-          body: |
-            - Evolution X Android 15 ROM
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: "Polaris-EvoX15-Kernel-${{ github.run_number }}"
+        run: |
+          # 1. Tạo GitHub Release chính thức bằng GitHub CLI (gh)
+          gh release create "$TAG_NAME"
+            --title "$TAG_NAME"
+            --notes "- Evolution X Android 15 ROM
             - SukiSU ResukiSU Root
             - SUSFS 2+
             - NonGKI
-            - Osm0sis Anykernel3
+            - Osm0sis Anykernel3"
 
-      - name: ⬆️ Upload Release Assets Dynamically
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Loop through all files in the downloaded-artifacts directory
-          for file in ./downloaded-artifacts/Kernel-*/*; do
-              # Skip directories
-              if [ -d "$file" ]; then
-                  continue
+          # 2. Tìm kiếm đệ quy (**) để quét sạch mọi file .zip nằm sâu trong các thư mục con và upload lên
+          shopt -s globstar
+          for file in ./device_kernel/**/*.zip; do
+              if [ -f "$file" ]; then
+                  echo "Uploading asset: $file"
+                  gh release upload "$TAG_NAME" "$file"
               fi
-
-              # Upload the file to the GitHub release
-              echo "Uploading $file..."
-              gh release upload "$tag_name" "$file"
           done
-
-      # Display Files Uploaded
-      - name: 📋 Display Files Uploaded
-        run: |
-          echo "GitHub release created with the following files:"
-          ls ./downloaded-artifacts/**/*
