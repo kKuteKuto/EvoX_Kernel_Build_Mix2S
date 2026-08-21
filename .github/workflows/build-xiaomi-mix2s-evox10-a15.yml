@@ -90,6 +90,9 @@ env:
 
   FREE_MORE_SPACE: "false" # if u want get more space, enabled it.
 
+permissions:
+  contents: write
+
 jobs:
   build-kernel:
     name: Xiaomi Mix2s (Evolution X 10 A15)
