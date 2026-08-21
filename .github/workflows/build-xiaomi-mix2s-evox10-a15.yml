@@ -152,27 +152,29 @@ jobs:
         with:
           tag_name: Polaris-EvoX15-Kernel-${{ github.run_number }}
           prerelease: false
-          release_name: Xiaomi Mi Mix2S A15 NonGKI Kernel
+          release_name: "${{ env.RELEASE_NAME }} ${{ env.TIME }}"
           body: |
             - Evolution X Android 15 ROM
             - SukiSU ResukiSU Root
             - SUSFS 2+
             - NonGKI
             - Osm0sis Anykernel3
-
       - name: ⬆️ Upload Release Assets Dynamically
         run: |
-          for file in ./downloaded-artifacts/**/*polaris*; do
+          # Loop through all files in the downloaded-artifacts directory
+          for file in ./downloaded-artifacts/Kernel-*/*; do
+              # Skip directories
               if [ -d "$file" ]; then
                   continue
               fi
-           echo "Uploading Polaris file: $file..."
-              gh release upload "$file"
+
+              # Upload the file to the GitHub release
+              echo "Uploading $file..."
+              gh release upload "$tag_name" "$file"
           done
 
       # Display Files Uploaded
       - name: 📋 Display Files Uploaded
         run: |
-          echo "GitHub release created with the following Polaris files:"
-          ls ./downloaded-artifacts/**/*polaris*
-          
+          echo "GitHub release created with the following files:"
+          ls ./downloaded-artifacts/**/*
