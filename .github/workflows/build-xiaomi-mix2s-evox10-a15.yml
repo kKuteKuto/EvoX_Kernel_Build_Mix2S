@@ -163,6 +163,6 @@ jobs:
           for file in ./device_kernel/**/*.zip; do
               if [ -f "$file" ]; then
                   echo "Uploading asset: $file"
-                  gh release upload "$TAG_NAME" "$file"
+                  gh release upload "$TAG_NAME" "$file" --clobber
               fi
           done
