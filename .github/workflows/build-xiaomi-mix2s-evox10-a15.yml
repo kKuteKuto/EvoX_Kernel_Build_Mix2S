@@ -90,14 +90,13 @@ env:
 
   FREE_MORE_SPACE: "false" # if u want get more space, enabled it.
 
-permissions:
-  contents: write
-
 jobs:
   build-kernel:
     name: Xiaomi Mix2s (Evolution X 10 A15)
     runs-on: ubuntu-latest # u can changed to ubuntu 22.04, and need container set ubuntu-latest
     # container: archlinux/archlinux:latest # if u need use arch linux -> archlinux/archlinux:latest or ubuntu 20.04 -> ubuntu:focal
+    permissions:
+      contents: write
     env:
       CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
       CCACHE_NOHASHDIR: "true"
@@ -152,14 +151,17 @@ jobs:
         with:
           tag_name: Polaris-EvoX15-Kernel-${{ github.run_number }}
           prerelease: false
-          release_name: "${{ env.RELEASE_NAME }} ${{ env.TIME }}"
+          release_name: "$tag_name $time"
           body: |
             - Evolution X Android 15 ROM
             - SukiSU ResukiSU Root
             - SUSFS 2+
             - NonGKI
             - Osm0sis Anykernel3
+
       - name: ⬆️ Upload Release Assets Dynamically
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Loop through all files in the downloaded-artifacts directory
           for file in ./downloaded-artifacts/Kernel-*/*; do
