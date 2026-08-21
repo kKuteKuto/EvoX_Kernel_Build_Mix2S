@@ -150,8 +150,8 @@ jobs:
           TAG_NAME: "Polaris-EvoX15-Kernel-${{ github.run_number }}"
         run: |
           # 1. Tạo GitHub Release chính thức bằng GitHub CLI (gh)
-          gh release create "$TAG_NAME"
-            --title "$TAG_NAME"
+          gh release create "$TAG_NAME" \
+            --title "$TAG_NAME" \
             --notes "- Evolution X Android 15 ROM
             - SukiSU ResukiSU Root
             - SUSFS 2+
